@@ -1,8 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Streamdown } from "@phaserjs/streamdown-lite";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 import { streamPoem } from "../lib/geminiClient";
+
+// Check if content looks like HTML (has HTML tags)
+function isHtml(text: string): boolean {
+  // Matches common HTML tags like <div>, <p>, <h1>, <span>, etc.
+  return /<[a-z][\s\S]*>/i.test(text);
+}
 
 export default function Home() {
   const [prompt, setPrompt] = useState("Write a 100-word poem. give rich text");
@@ -63,9 +71,20 @@ export default function Home() {
 
         <div className="space-y-2">
           <div className="text-sm font-medium text-slate-300">Stream</div>
-          <div className="min-h-[160px] rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm">
+          <div className="min-h-[160px] rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm prose prose-invert prose-sm max-w-none">
             {output ? (
-              <Streamdown>{output}</Streamdown>
+              isHtml(output) ? (
+                // Render as raw HTML
+                <div dangerouslySetInnerHTML={{ __html: output }} />
+              ) : (
+                // Render as Markdown
+                <ReactMarkdown
+                  rehypePlugins={[rehypeRaw]}
+                  remarkPlugins={[remarkGfm]}
+                >
+                  {output}
+                </ReactMarkdown>
+              )
             ) : (
               "Response will appear here..."
             )}
