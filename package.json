@@ -12,7 +12,7 @@
     "@google/genai": "^1.30.0",
     "@phaserjs/streamdown-lite": "^1.0.1",
     "@tailwindcss/typography": "^0.5.19",
-    "next": "16.0.6",
+    "next": "16.0.7",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-markdown": "^10.1.0",
